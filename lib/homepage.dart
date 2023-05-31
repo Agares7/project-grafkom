@@ -238,7 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             _dismissInstrumentsDialog();
                           },
                           tooltip: "Pencil",
-                          icon: Image.asset('assets/images/shape.png'),
+                          icon: Image.asset('assets/images/pen.png'),
                         ),
                       ),
                       SizedBox(
@@ -250,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             _dismissInstrumentsDialog();
                           },
                           tooltip: "Rectangle",
-                          icon: Image.asset('assets/images/shape.png'),
+                          icon: Image.asset('assets/images/rect.png'),
                         ),
                       ),
                       SizedBox(
@@ -262,7 +262,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             _dismissInstrumentsDialog();
                           },
                           tooltip: "Line",
-                          icon: Image.asset('assets/images/shape.png'),
+                          icon: Image.asset('assets/images/diagonal-line.png'),
                         ),
                       ),
                       SizedBox(
@@ -274,7 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             _dismissInstrumentsDialog();
                           },
                           tooltip: "Triangle",
-                          icon: Image.asset('assets/images/shape.png'),
+                          icon: Image.asset('assets/images/triangle.png'),
                         ),
                       ),
                       SizedBox(
@@ -286,7 +286,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             _dismissInstrumentsDialog();
                           },
                           tooltip: "Circle",
-                          icon: Image.asset('assets/images/shape.png'),
+                          icon: Image.asset('assets/images/circle.png'),
                         ),
                       ),
                     ],
