@@ -4,8 +4,10 @@ Color selectedColor = Colors.black;
 double penThickness = 5.0;
 DrawMode mode = DrawMode.pencil;
 
-enum DrawMode{
+enum DrawMode {
   pencil,
   rect,
-  line
+  line,
+  triangle,
+  circle,
 }

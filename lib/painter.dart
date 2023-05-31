@@ -48,15 +48,16 @@ class _PainterState extends State<Painter> {
       Offset pos = (context.findRenderObject() as RenderBox)
           .globalToLocal(start.globalPosition);
       widget.painterController._pathHistory.add(pos);
-    }
-    if (mode == DrawMode.rect) {
+    } else if (mode == DrawMode.rect) {
       widget.startOffset = (context.findRenderObject() as RenderBox)
           .globalToLocal(start.globalPosition);
-    }
-    if (mode == DrawMode.line) {
+    } else if (mode == DrawMode.line) {
       widget.startOffset = (context.findRenderObject() as RenderBox)
           .globalToLocal(start.globalPosition);
       widget.painterController._pathHistory.add(widget.startOffset);
+    } else if (mode == DrawMode.triangle || mode == DrawMode.circle) {
+      widget.startOffset = (context.findRenderObject() as RenderBox)
+          .globalToLocal(start.globalPosition);
     }
 
     widget.painterController._notifyListeners();
@@ -76,17 +77,28 @@ class _PainterState extends State<Painter> {
   }
 
   void _onPanEnd(DragEndDetails end) {
-    // widget.painterController._pathHistory.endCurrent();
-
     if (mode == DrawMode.rect) {
       widget.painterController._pathHistory
           .addRect(widget.startOffset, widget.endOffset);
-    }
-
-    if (mode == DrawMode.line) {
+    } else if (mode == DrawMode.line) {
       widget.painterController._pathHistory.add(widget.endOffset);
       widget.painterController._pathHistory.updateCurrent(widget.endOffset);
+    } else if (mode == DrawMode.triangle) {
+      Path path = new Path();
+      widget.painterController._pathHistory._drawTriangle(
+          path, widget.startOffset, widget.endOffset);
+      widget.painterController._pathHistory._paths
+          .add(new MapEntry<Path, Paint>(
+              path, widget.painterController._pathHistory.currentPaint));
+    } else if (mode == DrawMode.circle) {
+      Path path = new Path();
+      widget.painterController._pathHistory._drawCircle(
+          path, widget.startOffset, widget.endOffset);
+      widget.painterController._pathHistory._paths
+          .add(new MapEntry<Path, Paint>(
+              path, widget.painterController._pathHistory.currentPaint));
     }
+
     widget.painterController._pathHistory.endCurrent();
     widget.painterController._notifyListeners();
   }
@@ -164,6 +176,26 @@ class _PathHistory {
     _inDrag = false;
   }
 
+  void _drawTriangle(Path path, Offset startPoint, Offset endPoint) {
+    if (!_inDrag && mode == DrawMode.triangle) {
+      _inDrag = true;
+      path.moveTo(startPoint.dx, startPoint.dy);
+      path.lineTo(startPoint.dx, endPoint.dy);
+      path.lineTo(endPoint.dx, endPoint.dy);
+      path.close();
+    }
+  }
+
+  void _drawCircle(Path path, Offset startPoint, Offset endPoint) {
+    if (!_inDrag && mode == DrawMode.circle) {
+      _inDrag = true;
+      double radius = (endPoint.dx - startPoint.dx) / 2;
+      Offset center = Offset(
+          startPoint.dx + radius, startPoint.dy + radius);
+      path.addOval(Rect.fromCircle(center: center, radius: radius));
+    }
+  }
+
   void draw(Canvas canvas, Size size) {
     canvas.drawRect(
         new Rect.fromLTWH(0.0, 0.0, size.width, size.height), _backgroundPaint);
@@ -171,7 +203,6 @@ class _PathHistory {
       canvas.drawPath(path.key, path.value);
   }
 }
-
 
 class PainterController extends ChangeNotifier {
   Color _drawColor = selectedColor;
